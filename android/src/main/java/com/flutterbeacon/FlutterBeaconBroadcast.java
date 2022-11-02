@@ -10,7 +10,9 @@ import androidx.annotation.NonNull;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.BeaconTransmitter;
+// import org.altbeacon.beacon.BeaconTransmitter;
+
+import com.flutterbeacon.custom.CustomBeaconTransmitter;
 
 import java.util.Map;
 
@@ -18,23 +20,38 @@ import io.flutter.plugin.common.MethodChannel;
 
 class FlutterBeaconBroadcast {
   private static final String TAG = FlutterBeaconBroadcast.class.getSimpleName();
-  private final BeaconTransmitter beaconTransmitter;
+  private final CustomBeaconTransmitter beaconTransmitter;
+  private static AdvertiseCallback advertiseCallback = null;
+  private static boolean started = false;
 
   FlutterBeaconBroadcast(Activity activity, BeaconParser iBeaconLayout) {
-    this.beaconTransmitter = new BeaconTransmitter(activity, iBeaconLayout);
+    this.beaconTransmitter = new CustomBeaconTransmitter(activity, iBeaconLayout);
   }
   
   void isBroadcasting(@NonNull MethodChannel.Result result) {
-    result.success(beaconTransmitter.isStarted());
+    result.success(started);
   }
   
   void stopBroadcast(@NonNull MethodChannel.Result result) {
-    beaconTransmitter.stopAdvertising();
+    beaconTransmitter.stopAdvertising(advertiseCallback);
+    // beaconTransmitter.stopAdvertising();
+    started = false;
     result.success(true);
   }
   
   @SuppressWarnings("rawtypes")
   void startBroadcast(Object arguments, @NonNull final MethodChannel.Result result) {
+    if (advertiseCallback != null) {
+      beaconTransmitter.stopAdvertising(advertiseCallback);
+      // beaconTransmitter.stopAdvertising();
+      started = false;
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+
     if (!(arguments instanceof Map)) {
       result.error("Broadcast", "Invalid parameter", null);
       return;
@@ -52,15 +69,17 @@ class FlutterBeaconBroadcast {
       if (advertisingTxPowerLevel instanceof Integer) {
         beaconTransmitter.setAdvertiseTxPowerLevel((Integer) advertisingTxPowerLevel);
       }
-      beaconTransmitter.startAdvertising(beacon, new AdvertiseCallback() {
+      advertiseCallback = new AdvertiseCallback() {
         @Override
         public void onStartSuccess(AdvertiseSettings settingsInEffect) {
           Log.d(TAG, "Start broadcasting = " + beacon);
+          started = true;
           result.success(true);
         }
 
         @Override
         public void onStartFailure(int errorCode) {
+          started = false;
           String error = "FEATURE_UNSUPPORTED";
           if (errorCode == ADVERTISE_FAILED_DATA_TOO_LARGE) {
             error = "DATA_TOO_LARGE";
@@ -74,7 +93,8 @@ class FlutterBeaconBroadcast {
           Log.e(TAG, error);
           result.error("Broadcast", error, null);
         }
-      });
+      };
+      beaconTransmitter.startAdvertising(beacon, advertiseCallback);
     } else {
       Log.e(TAG, "FEATURE_UNSUPPORTED");
       result.error("Broadcast", "FEATURE_UNSUPPORTED", null);
