@@ -246,6 +246,10 @@
     }
     
     if ([@"startBroadcast" isEqualToString:call.method]) {
+        if (self.peripheralManager) {
+            [self.peripheralManager stopAdvertising];
+        }
+        usleep(100000);
         self.flutterBroadcastResult = result;
         [self startBroadcast:call.arguments];
         return;
