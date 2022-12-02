@@ -33,7 +33,7 @@ public class CustomBeaconTransmitter {
     public static final int NOT_SUPPORTED_MULTIPLE_ADVERTISEMENTS = 3;
     public static final int NOT_SUPPORTED_CANNOT_GET_ADVERTISER = 4;
     public static final int NOT_SUPPORTED_CANNOT_GET_ADVERTISER_MULTIPLE_ADVERTISEMENTS = 5;
-    private static final String TAG = "BeaconTransmitter";
+    private static final String TAG = "CustomBeaconTransmitter";
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeAdvertiser mBluetoothLeAdvertiser;
     private int mAdvertiseMode = AdvertiseSettings.ADVERTISE_MODE_LOW_POWER;
@@ -59,6 +59,8 @@ public class CustomBeaconTransmitter {
             mBluetoothAdapter = bluetoothManager.getAdapter();
             mBluetoothLeAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
             Log.d(TAG, "new BeaconTransmitter constructed.  mbluetoothLeAdvertiser is " + mBluetoothLeAdvertiser);
+
+
         }
         else {
             Log.e(TAG, "Failed to get BluetoothManager");
