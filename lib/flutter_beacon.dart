@@ -31,14 +31,6 @@ class FlutterBeacon {
   static const MethodChannel _methodChannel =
       const MethodChannel('flutter_beacon');
 
-  /// Event Channel used to communicate to native code ranging beacons.
-  static const EventChannel _rangingChannel =
-      EventChannel('flutter_beacon_event');
-
-  /// Event Channel used to communicate to native code monitoring beacons.
-  static const EventChannel _monitoringChannel =
-      EventChannel('flutter_beacon_event_monitoring');
-
   /// Event Channel used to communicate to native code to checking
   /// for bluetooth state changed.
   static const EventChannel _bluetoothStateChangedChannel =
@@ -86,37 +78,12 @@ class FlutterBeacon {
     return result == 1;
   }
 
-  /// Set the default AuthorizationStatus to use in requesting location authorization.
-  /// For iOS, this can be either [AuthorizationStatus.whenInUse] or [AuthorizationStatus.always].
-  /// For Android, this is not used.
-  ///
-  /// This method should be called very early to have an effect,
-  /// before any of the other initializeScanning or authorizationStatus getters.
-  ///
-  Future<bool> setLocationAuthorizationTypeDefault(
-      AuthorizationStatus authorizationStatus) async {
-    return await _methodChannel.invokeMethod(
-        'setLocationAuthorizationTypeDefault', authorizationStatus.value);
-  }
-
   /// Check for the latest [AuthorizationStatus] from device.
   ///
   /// For Android, this will return [AuthorizationStatus.allowed], [AuthorizationStatus.denied] or [AuthorizationStatus.notDetermined].
   Future<AuthorizationStatus> get authorizationStatus async {
     final status = await _methodChannel.invokeMethod('authorizationStatus');
     return AuthorizationStatus.parse(status);
-  }
-
-  /// Return `true` when location service is enabled, otherwise `false`.
-  Future<bool> get checkLocationServicesIfEnabled async {
-    final result =
-        await _methodChannel.invokeMethod('checkLocationServicesIfEnabled');
-
-    if (result is bool) {
-      return result;
-    }
-
-    return result == 1;
   }
 
   /// Check for the latest [BluetoothState] from device.
@@ -152,19 +119,6 @@ class FlutterBeacon {
     return result == 1;
   }
 
-  /// Request to open Locations Settings from device.
-  ///
-  /// For iOS, this will does nothing because of private method.
-  Future<bool> get openLocationSettings async {
-    final result = await _methodChannel.invokeMethod('openLocationSettings');
-
-    if (result is bool) {
-      return result;
-    }
-
-    return result == 1;
-  }
-
   /// Request to open Application Settings from device.
   ///
   /// For Android, this will does nothing.
@@ -178,18 +132,6 @@ class FlutterBeacon {
     return result == 1;
   }
 
-  /// Customize duration of the beacon scan on the Android Platform.
-  Future<bool> setScanPeriod(int scanPeriod) async {
-    return await _methodChannel
-        .invokeMethod('setScanPeriod', {"scanPeriod": scanPeriod});
-  }
-
-  /// Customize duration spent not scanning between each scan cycle on the Android Platform.
-  Future<bool> setBetweenScanPeriod(int scanPeriod) async {
-    return await _methodChannel.invokeMethod(
-        'setBetweenScanPeriod', {"betweenScanPeriod": scanPeriod});
-  }
-
   /// Close scanning API.
   Future<bool> get close async {
     final result = await _methodChannel.invokeMethod('close');
@@ -199,28 +141,6 @@ class FlutterBeacon {
     }
 
     return result == 1;
-  }
-
-  /// Start ranging iBeacons with defined [List] of [Region]s.
-  ///
-  /// This will fires [RangingResult] whenever the iBeacons in range.
-  Stream<RangingResult> ranging(List<Region> regions) {
-    final list = regions.map((region) => region.toJson).toList();
-    final Stream<RangingResult> onRanging = _rangingChannel
-        .receiveBroadcastStream(list)
-        .map((dynamic event) => RangingResult.from(event));
-    return onRanging;
-  }
-
-  /// Start monitoring iBeacons with defined [List] of [Region]s.
-  ///
-  /// This will fires [MonitoringResult] whenever the iBeacons in range.
-  Stream<MonitoringResult> monitoring(List<Region> regions) {
-    final list = regions.map((region) => region.toJson).toList();
-    final Stream<MonitoringResult> onMonitoring = _monitoringChannel
-        .receiveBroadcastStream(list)
-        .map((dynamic event) => MonitoringResult.from(event));
-    return onMonitoring;
   }
 
   /// Start checking for bluetooth state changed.

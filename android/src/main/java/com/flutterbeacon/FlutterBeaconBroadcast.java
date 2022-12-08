@@ -8,10 +8,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconParser;
+// import org.altbeacon.beacon.Beacon;
+// import org.altbeacon.beacon.BeaconParser;
 // import org.altbeacon.beacon.BeaconTransmitter;
 
+import com.flutterbeacon.custom.Beacon;
+import com.flutterbeacon.custom.BeaconParser;
 import com.flutterbeacon.custom.CustomBeaconTransmitter;
 
 import java.util.Map;

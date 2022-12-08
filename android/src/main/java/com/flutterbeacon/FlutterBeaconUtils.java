@@ -2,10 +2,10 @@ package com.flutterbeacon;
 
 import android.util.Log;
 
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.MonitorNotifier;
-import org.altbeacon.beacon.Region;
+import com.flutterbeacon.custom.Beacon;
+import com.flutterbeacon.custom.Identifier;
+import com.flutterbeacon.custom.MonitorNotifier;
+import com.flutterbeacon.custom.Region;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +40,7 @@ class FlutterBeaconUtils {
     map.put("minor", beacon.getId3().toInt());
     map.put("rssi", beacon.getRssi());
     map.put("txPower", beacon.getTxPower());
-    map.put("accuracy", String.format(Locale.US, "%.2f", beacon.getDistance()));
+    map.put("accuracy", "");
     map.put("macAddress", beacon.getBluetoothAddress());
 
     return map;

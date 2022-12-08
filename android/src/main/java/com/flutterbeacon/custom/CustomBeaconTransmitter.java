@@ -12,8 +12,8 @@ import android.content.pm.PackageManager;
 import android.os.ParcelUuid;
 import android.util.Log;
 
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconParser;
+import com.flutterbeacon.custom.Beacon;
+import com.flutterbeacon.custom.BeaconParser;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

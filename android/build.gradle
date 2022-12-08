@@ -34,7 +34,7 @@ dependencies {
 //    api project(':androidbeaconlibrary:lib')
     //api 'org.altbeacon:android-beacon-library:2.16.3'
     //api "org.altbeacon:android-beacon-library:2.17.1"
-     api "org.altbeacon:android-beacon-library:2.19"
+    //  api "org.altbeacon:android-beacon-library:2.19"
     // api fileTree('/Users/jochen/AndroidStudioProjects/android-beacon-library/lib/build/outputs/aar/') { include '*.aar' }
     // api files('/Users/jochen/AndroidStudioProjects/android-beacon-library/lib/build/outputs/aar/android-beacon-library-release.jar')
     // api project('/Users/jochen/AndroidStudioProjects/android-beacon-library')
