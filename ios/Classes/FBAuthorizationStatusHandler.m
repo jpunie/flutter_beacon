@@ -32,7 +32,7 @@
 
 - (FlutterError * _Nullable)onListenWithArguments:(id _Nullable)arguments eventSink:(nonnull FlutterEventSink)events {
     // initialize central manager if it itsn't
-    [self.instance initializeLocationManager];
+    // [self.instance initializeLocationManager];
     
     if (self.instance) {
         self.instance.flutterEventSinkAuthorization = events;
